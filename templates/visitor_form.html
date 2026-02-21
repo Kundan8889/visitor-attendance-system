@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Visitor Pass Form</title>
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/visitor_form.css') }}">
+
+</head>
+<body>
+  <div class="pass">
+    <div class="pass-header">
+      <div class="org">{{ org_name }}</div>
+      <div class="title">VISITOR PASS</div>
+    </div>
+
+    <form method="post" action="/api/visitors/issue" target="_blank" autocomplete="off">
+      <div class="row">
+        <div class="field">
+          <span class="label">Pass No.:</span>
+          <input name="pass_no" class="input" required />
+        </div>
+        <div class="field">
+          <span class="label">Date:</span>
+          <span class="value muted">Auto-generated</span>
+        </div>
+      </div>
+
+      <div class="section-title">Visitor Details</div>
+      <div class="field-line"><span class="label">Name:</span><input name="name" class="input" required /></div>
+      <div class="field-line"><span class="label">Company:</span><input name="company" class="input" /></div>
+      <div class="field-line"><span class="label">Contact No.:</span><input name="contact" class="input" /></div>
+      <div class="field-line"><span class="label">ID Proof:</span><input name="id_proof" class="input" /></div>
+      <div class="row">
+        <div class="field">
+          <span class="label">Laptop No:</span>
+          <input name="laptop_no" class="input" />
+        </div>
+        <div class="field">
+          <span class="label">Mobile Qnty:</span>
+          <input name="mobile_qty" class="input" />
+        </div>
+      </div>
+      <div class="field-line"><span class="label">Pen Drive / Hard disk details:</span><input name="storage_details" class="input" /></div>
+
+      <div class="section-title">Visit Details</div>
+      <div class="field-line"><span class="label">Person to Visit:</span><input name="person_to_visit" class="input" /></div>
+      <div class="field-line"><span class="label">Department:</span><input name="department" class="input" /></div>
+      <div class="field-line"><span class="label">Purpose:</span><input name="purpose" class="input" /></div>
+      <div class="row">
+        <div class="field">
+          <span class="label">Time In:</span>
+          <input name="time_in" class="input" placeholder="HH:MM:SS" />
+        </div>
+        <div class="field">
+          <span class="label">Time Out:</span>
+          <input name="time_out" class="input" placeholder="HH:MM:SS" />
+        </div>
+      </div>
+
+      <div class="section-title">Authorization</div>
+      <div class="field-line"><span class="label">Security (Issued By):</span><input name="security_issued_by" class="input" /></div>
+      <div class="field-line"><span class="label">Employee Visited:</span><input name="employee_visited" class="input" /></div>
+
+      <div class="section-title">Instructions:</div>
+      <div class="instructions">
+        <p>Photography and video recording are strictly prohibited within the factory premises.</p>
+        <p>This facility manufactures defense-related products. Unauthorized recording, use of electronic devices, or disclosure of information is strictly forbidden.</p>
+        <p>Please get it signed from the person you visited and return to security before exit.</p>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="print-btn">Generate Pass</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

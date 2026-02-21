@@ -1,0 +1,112 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <title>Multi Camera Attendance (ByteTrack)</title>
+      <link rel="stylesheet" href="{{ url_for("static", filename="css/app.css") }}">
+    </head>
+    <body>
+      <div class="wrap">
+        <div class="topbar">
+          <div class="title-block">
+            <p class="eyebrow">NexusTech Innov</p>
+            <h1>Facial Attendance Command Center</h1>
+            <p class="subtitle">Live camera monitoring and attendance timeline.</p>
+          </div>
+          <div class="top-actions">
+            <div class="quick-actions">
+              <button class="action-btn" onclick="quickAddEmployee()">Add Employee</button>
+              <button class="action-btn" onclick="quickRemoveEmployee()">Remove Employee</button>
+              <button class="action-btn" onclick="quickIssueVisitorPass()">Issue Visitor Pass</button>
+              <button class="action-btn" onclick="quickRegisterVisitorFace()">Register Visitor Face</button>
+              <button class="action-btn" onclick="quickRebuildVisitorEmbeddings()">Rebuild Visitor Embeddings</button>
+              <button class="action-btn" onclick="quickRemoveVisitorEmbedding()">Remove Visitor (Embeddings)</button>
+              <button class="action-btn" onclick="quickRetrainModel()">Retrain Model</button>
+              <button class="action-btn" onclick="quickRevokeVisitorPass()">Revoke Visitor Pass</button>
+              <button class="action-btn" onclick="quickManualMark()">Manual Mark</button>
+              <button class="action-btn" onclick="exportAttendanceCsv()">Export CSV</button>
+              <button class="action-btn" onclick="toggleCameraConfig()">Camera Config</button>
+            </div>
+            <button class="ghost-btn" onclick="refreshAll(true)">Refresh</button>
+            <span id="syncBadge" class="sync-status">Waiting for first sync</span>
+            <span id="visitorEmbedStatus" class="sync-status">Visitor embeddings: idle</span>
+          </div>
+        </div>
+
+        <div id="dashboardSection" class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Total Employees</span>
+            <div id="totalEmployeesPill" class="kpi-value">0</div>
+            <div class="kpi-sub" id="totalEmployeesSub">Known roster</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Present</span>
+            <div id="presentPill" class="kpi-value">0</div>
+            <div class="kpi-sub" id="presentSub">Selected date</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Absent</span>
+            <div id="absentPill" class="kpi-value">0</div>
+            <div class="kpi-sub" id="absentSub">From roster</div>
+          </div>
+        </div>
+
+        <div id="liveSection" class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Live Stream</h3>
+              <p class="panel-note">Real-time camera feed and controls.</p>
+            </div>
+            <div class="inline-controls">
+              <input id="cameraSearch" placeholder="Search camera..." />
+              <select id="cameraFilter">
+                <option value="all">All</option>
+                <option value="running">Running</option>
+                <option value="stopped">Stopped</option>
+              </select>
+            </div>
+          </div>
+          <div id="cameraGrid"></div>
+          <div id="cameraEmpty" class="camera-empty" style="display:none; margin-top:8px;">
+            No cameras match the current filter.
+          </div>
+        </div>
+
+        <div id="cameraConfigPanel" class="panel hidden">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Camera Configuration</h3>
+              <p class="panel-note">Use direct source URL or host/IP plus credentials.</p>
+            </div>
+          </div>
+          <div class="grid">
+            <input id="camId" placeholder="Camera ID (optional)" />
+            <input id="camName" placeholder="Display Name (optional)" />
+            <input id="camHost" placeholder="Host/IP (e.g. 192.168.1.10)" />
+            <input id="camPort" placeholder="Port (default 554)" value="554" />
+            <input id="camUser" placeholder="Username" />
+            <input id="camPass" placeholder="Password" type="password" />
+            <input id="camPath" placeholder="Path (default Streaming/Channels/101)" value="Streaming/Channels/101" />
+            <input id="camSource" placeholder="Direct Source URL / Webcam index (optional)" />
+            <select id="camRole">
+              <option value="general">Role: General</option>
+              <option value="entry">Role: Entry</option>
+              <option value="exit">Role: Exit</option>
+            </select>
+          </div>
+          <div class="inline-controls" style="margin-top:10px;">
+            <button class="primary" onclick="addCamera(true)">Add + Start Camera</button>
+            <button class="subtle" onclick="addCamera(false)">Add Camera Only</button>
+            <button class="danger" onclick="stopAllCameras()">Stop All</button>
+            <button class="subtle" onclick="toggleCameraConfig()">Hide Config</button>
+          </div>
+          <div id="formMsg" class="status-msg muted">Fill either Direct Source or Host/IP + credentials.</div>
+        </div>
+      </div>
+
+      <div id="toastStack"></div>
+
+      <script src="{{ url_for("static", filename="js/app.js") }}"></script>
+    </body>
+    </html>

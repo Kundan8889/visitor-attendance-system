@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Visitor Pass</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/visitor_pass.css') }}">
+  {% comment %} <link rel="stylesheet" href="../static/css/visitor_pass.css"> {% endcomment %}
+</head>
+<body>
+  <div class="pass" data-pass-id="{{ pass_no }}">
+    <div class="pass-header">
+      <div class="org">{{ org_name }}</div>
+      <div class="title">VISITOR PASS</div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <span class="label">Pass No.:</span>
+        <input class="input" value="{{ pass_no }}" readonly />
+      </div>
+      <div class="field">
+        <span class="label">Date:</span>
+        <span class="value">{{ pass_date }}</span>
+      </div>
+    </div>
+
+    <div class="section-title">Visitor Details</div>
+    <div class="field-line"><span class="label">Name:</span><span class="value">{{ visitor.name }}</span></div>
+    <div class="field-line"><span class="label">Company:</span><input class="input" data-field="company" value="{{ visitor.company }}" /></div>
+    <div class="field-line"><span class="label">Contact No.:</span><input class="input" data-field="contact" value="{{ visitor.contact }}" /></div>
+    <div class="field-line"><span class="label">ID Proof:</span><input class="input" data-field="id_proof" value="{{ visitor.id_proof }}" /></div>
+    <div class="row">
+      <div class="field">
+        <span class="label">Laptop No:</span>
+        <input class="input" data-field="laptop_no" value="{{ visitor.laptop_no }}" />
+      </div>
+      <div class="field">
+        <span class="label">Mobile Qnty:</span>
+        <input class="input" data-field="mobile_qty" value="{{ visitor.mobile_qty }}" />
+      </div>
+    </div>
+    <div class="field-line"><span class="label">Pen Drive / Hard disk details:</span><input class="input" data-field="storage_details" value="{{ visitor.storage_details }}" /></div>
+
+    <div class="section-title">Visit Details</div>
+    <div class="field-line"><span class="label">Person to Visit:</span><input class="input" data-field="person_to_visit" value="{{ visitor.person_to_visit }}" /></div>
+    <div class="field-line"><span class="label">Department:</span><input class="input" data-field="department" value="{{ visitor.department }}" /></div>
+    <div class="field-line"><span class="label">Purpose:</span><input class="input" data-field="purpose" value="{{ visitor.purpose }}" /></div>
+    <div class="row">
+      <div class="field">
+        <span class="label">Time In:</span>
+        <span class="value">{{ time_in }}</span>
+      </div>
+      <div class="field">
+        <span class="label">Time Out:</span>
+        <span class="value">{{ visitor.time_out }}</span>
+      </div>
+    </div>
+
+    <div class="section-title">Authorization</div>
+    <div class="field-line"><span class="label">Security (Issued By):</span><input class="input" data-field="security_issued_by" value="{{ visitor.security_issued_by }}" /></div>
+    <div class="field-line"><span class="label">Employee Visited:</span><input class="input" data-field="employee_visited" value="{{ visitor.employee_visited }}" /></div>
+
+    <div class="section-title">Instructions:</div>
+    <div class="instructions">
+      <p>Photography and video recording are strictly prohibited within the factory premises.</p>
+      <p>This facility manufactures defense-related products. Unauthorized recording, use of electronic devices, or disclosure of information is strictly forbidden.</p>
+      <p>Please get it signed from the person you visited and return to security before exit.</p>
+    </div>
+
+    <div id="saveMsg" class="save-msg muted">Edits save automatically.</div>
+    <button class="print-btn" onclick="window.print()">Print</button>
+  </div>
+
+  <script>
+    (function () {
+      const passCard = document.querySelector('.pass');
+      if (!passCard) return;
+      const passId = passCard.getAttribute('data-pass-id') || '';
+      if (!passId) return;
+      const inputs = Array.from(document.querySelectorAll('input[data-field]'));
+      const saveMsg = document.getElementById('saveMsg');
+      if (!inputs.length) return;
+
+      let saveTimer = null;
+      let lastPayload = '';
+      let saving = false;
+
+      function setSaveMessage(text, tone) {
+        if (!saveMsg) return;
+        saveMsg.textContent = text;
+        saveMsg.classList.remove('good', 'bad', 'warn');
+        if (tone) saveMsg.classList.add(tone);
+      }
+
+      function collectFields() {
+        const fields = {};
+        inputs.forEach((input) => {
+          fields[input.getAttribute('data-field')] = input.value || '';
+        });
+        return fields;
+      }
+
+      async function persistFields() {
+        if (saving) return;
+        const fields = collectFields();
+        const payload = JSON.stringify({ id: passId, fields: fields });
+        if (payload === lastPayload) return;
+        lastPayload = payload;
+        saving = true;
+        setSaveMessage('Saving...', 'warn');
+        try {
+          const res = await fetch('/api/visitors/pass/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+          });
+          const data = await res.json();
+          if (!res.ok || !data.ok) {
+            setSaveMessage(data.error || 'Save failed', 'bad');
+            saving = false;
+            return;
+          }
+          setSaveMessage('Saved', 'good');
+        } catch (err) {
+          setSaveMessage('Save failed', 'bad');
+        } finally {
+          saving = false;
+        }
+      }
+
+      function scheduleSave() {
+        if (saveTimer) clearTimeout(saveTimer);
+        saveTimer = setTimeout(persistFields, 700);
+      }
+
+      inputs.forEach((input) => {
+        input.addEventListener('input', scheduleSave);
+        input.addEventListener('change', scheduleSave);
+        input.addEventListener('blur', scheduleSave);
+      });
+    })();
+  </script>
+</body>
+</html>

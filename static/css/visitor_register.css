@@ -1,0 +1,178 @@
+/* ==============================
+   RESET
+============================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: #eef2f7;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ==============================
+   CARD CONTAINER
+============================== */
+
+.pass {
+  width: 940px;
+  max-width: 100%;
+  background: #ffffff;
+ padding: 67px 75px;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+}
+
+/* ==============================
+   HEADER
+============================== */
+
+.pass-header {
+  margin-bottom: 24px;
+}
+
+.org {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 6px;
+  color: #0f172a;
+}
+
+/* ==============================
+   SECTION TITLE
+============================== */
+
+.section-title {
+  margin-top: 24px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #2563eb;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 5px;
+}
+
+/* ==============================
+   GRID SYSTEM
+============================== */
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin-bottom: 12px;
+}
+
+.field,
+.field-line {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+/* Make full width where needed */
+
+.field-line {
+  grid-column: 1 / -1;
+}
+
+/* ==============================
+   LABEL
+============================== */
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #334155;
+}
+
+/* ==============================
+   INPUT
+============================== */
+
+.input {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* ==============================
+   VALUE TEXT
+============================== */
+
+.value {
+  font-size: 13px;
+  padding: 8px 0;
+  color: #0f172a;
+}
+
+/* ==============================
+   INSTRUCTIONS BOX
+============================== */
+
+.instructions {
+  background: #f8fafc;
+  border-left: 4px solid #2563eb;
+  padding: 14px;
+  font-size: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* ==============================
+   MUTED TEXT
+============================== */
+
+.muted {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 8px;
+}
+
+/* ==============================
+   BUTTON
+============================== */
+
+.print-btn {
+  margin-top: 18px;
+  padding: 10px 26px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(90deg, #2563eb, #1e40af);
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.print-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+}

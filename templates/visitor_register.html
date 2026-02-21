@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register Visitor Face</title>
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/visitor_register.css') }}">
+  
+</head>
+<body>
+  <div class="pass">
+    <div class="pass-header">
+      <div class="org">{{ org_name }}</div>
+      <div class="title">REGISTER VISITOR FACE</div>
+    </div>
+
+    <form id="registerForm" autocomplete="off">
+      <div class="row">
+        <div class="field">
+          <span class="label">Name:</span>
+          <input name="name" class="input" required />
+        </div>
+        <div class="field">
+          <span class="label">Camera Source:</span>
+          <input name="source" class="input" value="0" />
+        </div>
+      </div>
+
+      <div class="section-title">Visitor Details</div>
+      <div class="field-line"><span class="label">Company:</span><input name="company" class="input" /></div>
+      <div class="field-line"><span class="label">Contact No.:</span><input name="contact" class="input" /></div>
+      <div class="field-line"><span class="label">ID Proof:</span><input name="id_proof" class="input" /></div>
+      <div class="row">
+        <div class="field">
+          <span class="label">Laptop No:</span>
+          <input name="laptop_no" class="input" />
+        </div>
+        <div class="field">
+          <span class="label">Mobile Qnty:</span>
+          <input name="mobile_qty" class="input" />
+        </div>
+      </div>
+      <div class="field-line"><span class="label">Pen Drive / Hard disk details:</span><input name="storage_details" class="input" /></div>
+
+      <div class="section-title">Visit Details</div>
+      <div class="field-line"><span class="label">Person to Visit:</span><input name="person_to_visit" class="input" /></div>
+      <div class="field-line"><span class="label">Department:</span><input name="department" class="input" /></div>
+      <div class="field-line"><span class="label">Purpose:</span><input name="purpose" class="input" /></div>
+
+      <div class="section-title">Authorization</div>
+      <div class="field-line"><span class="label">Security (Issued By):</span><input name="security_issued_by" class="input" /></div>
+      <div class="field-line"><span class="label">Employee Visited:</span><input name="employee_visited" class="input" /></div>
+
+      <p class="muted">These details will be used to prefill future passes. You can edit them on the pass page.</p>
+
+      <div class="actions">
+        <button type="submit" class="print-btn" id="submitBtn">Start Face Registration</button>
+        <span class="muted" id="statusMsg"></span>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const statusMsg = document.getElementById('statusMsg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const payload = Object.fromEntries(new FormData(form).entries());
+      statusMsg.textContent = 'Starting face capture...';
+      submitBtn.disabled = true;
+      try {
+        const res = await fetch('/api/visitors/register_face', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          statusMsg.textContent = data.error || 'Failed to start visitor capture.';
+          submitBtn.disabled = false;
+          return;
+        }
+        statusMsg.textContent = 'Capture started. A camera window should open on the server.';
+      } catch (err) {
+        statusMsg.textContent = 'Failed to start visitor capture.';
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
